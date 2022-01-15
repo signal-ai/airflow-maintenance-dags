@@ -48,8 +48,8 @@ ALERT_EMAIL_ADDRESSES = []
 DEFAULT_MAX_DB_ENTRY_AGE_IN_DAYS = int(
     Variable.get("airflow_db_cleanup__max_db_entry_age_in_days", 30)
 )
-# Prints the database entries which will be getting deleted; set to False to avoid printing large lists and slowdown 
-# process 
+# Prints the database entries which will be getting deleted; set to False to avoid printing large lists and slowdown
+# process
 PRINT_DELETES = True
 # Whether the job should delete the db entries or not. Included if you want to
 # temporarily avoid deleting the db entries.
@@ -63,8 +63,19 @@ except AttributeError:
 
 # List of all the objects that will be deleted. Comment out the DB objects you
 # want to skip.
-DATABASE_OBJECTS = ['BaseJob', 'DagRun', 'TaskInstance', 'Log', 'XCom', 'SlaMiss', 'DagModel', 'TaskReschedule',
-                    'TaskFail', 'RenderedTaskInstanceFields', 'ImportError', 'Task', 'TaskSet']
+DATABASE_OBJECTS = [
+    'BaseJob',
+    'DagRun',
+    'TaskInstance',
+    'Log',
+    'XCom',
+    'SlaMiss',
+    'DagModel',
+    'TaskReschedule',
+    'TaskFail',
+    'RenderedTaskInstanceFields',
+    'ImportError'
+] + (['Task', 'TaskSet'] if str(conf.get("core", "executor")) == "CeleryExecutor"  else [])
 
 session = settings.Session()
 
